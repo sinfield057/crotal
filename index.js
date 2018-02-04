@@ -9,7 +9,7 @@ const app = express();
 const log = bunyan.createLogger( { name: "server" } );
 
 const PORT      = process.env.PORT || 8080;
-const PUBLIC    = __dirname + "/pubic";
+const PUBLIC    = __dirname + "/public";
 const REDIS_URL = process.env.REDIS_URL || null;
 
 app.use( bodyParser.urlencoded( { extended: false } ) );
@@ -26,4 +26,4 @@ const redisClient = redis.createClient( REDIS_URL );
 
 const io = socketIO( server );
 
-setInterval( () => io.emit( 'time', new Date().toTimeString() + ceva ), 1000);
+setInterval( () => io.emit( 'time', new Date().toTimeString() ), 1000);
