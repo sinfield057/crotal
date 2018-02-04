@@ -2,23 +2,28 @@ import express from "express";
 import bodyParser from "body-parser";
 import bunyan from "bunyan";
 import expressLog from "express-bunyan-logger";
+import socketIO from "socket.io";
+import redis from "redis";
 
 const app = express();
 const log = bunyan.createLogger( { name: "server" } );
 
-const port = process.env.PORT || 8080;
-
-//app.use( expressLog() );
-//app.use( expressLog.errorLogger() );
+const PORT      = process.env.PORT || 8080;
+const PUBLIC    = __dirname + "/pubic";
+const REDIS_URL = process.env.REDIS_URL || null;
 
 app.use( bodyParser.urlencoded( { extended: false } ) );
 app.use( bodyParser.json() );
+app.use( express.static( PUBLIC ) );
 
-app.use( express.static( __dirname + "/pubic" ) );
+app.get( "*", ( req, res ) => res.sendFile( PUBLIC + "/index.html" ) );
 
-app.get( "*", ( req, res ) => res.sendFile( __dirname + "/public/index.html" ) );
-
-
-app.listen( port, () => {
-    console.log( `Server running on port ${ port }` );
+const server = app.listen( PORT, () => {
+    console.log( `Server running on port ${ PORT }` );
 } );
+
+const redisClient = redis.createClient( REDIS_URL );
+
+const io = socketIO( server );
+
+setInterval( () => io.emit( 'time', new Date().toTimeString() + ceva ), 1000);
