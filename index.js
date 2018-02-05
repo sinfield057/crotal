@@ -7,6 +7,7 @@ import redis from 'redis';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import config from './config.json';
+import respond from './controllers/Chat';
 
 const app = express();
 const log = bunyan.createLogger( { name: 'server' } );
@@ -35,5 +36,10 @@ const server = app.listen( PORT, () => {
 const redisClient = redis.createClient( REDIS_URL );
 
 const io = socketIO( server );
+
+io.on( 'connection', ( socket ) => {
+    io.emit( 'user joined', 'A new user has joined.' );
+    respond( socket );
+} );
 
 setInterval( () => io.emit( 'time', new Date().toTimeString() ), 1000);
