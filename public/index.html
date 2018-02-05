@@ -121,6 +121,7 @@
             socket.emit( 'message', payload, function( data ) {
                 payload.date = Date.now();
                 appendMessage( payload );
+                messageInput.value = '';
             } );
         }
     }
