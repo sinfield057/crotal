@@ -5,6 +5,8 @@ import UserService from '../services/UserService';
 const router = express.Router();
 
 router.post( '/register', ( req, res ) => {
+
+    console.log( req.body );
     
     const userInfo = {
         email: req.body.email,

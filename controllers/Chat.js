@@ -2,8 +2,8 @@
 
 function respond( socket ) {
     socket.on( 'message', ( data, fn ) => {
-        message = {
-            from: data.email,
+        let message = {
+            from: data.from,
             text: data.text,
             date: Date.now()
         }

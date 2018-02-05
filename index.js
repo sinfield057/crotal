@@ -22,8 +22,8 @@ mongoose.connection.on( 'error', () => {
     throw 'DB connection error';
 } );
 
-app.use( bodyParser.urlencoded( { extended: false } ) );
 app.use( bodyParser.json() );
+app.use( bodyParser.urlencoded( { extended: true } ) );
 app.use( express.static( PUBLIC ) );
 app.use( '/api', require( './controllers' ) );
 

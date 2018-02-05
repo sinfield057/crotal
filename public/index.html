@@ -1,20 +1,127 @@
-<p id="server-time"></p>
-hello!
-<button id="test-event">test</button>
+<div id="login">
+    <input type="text" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <br />
+    <button id="login-button">Login</button>
+    <button id="register-button">Register</button>
+    <br />
+    <label id="error"></label>
+</div>
+
+<div id="chat" style="display: none">
+    <p id="logged-email"></p>
+    <ul id="chat-message-list">
+
+    </ul>
+    <br />
+    <input type="text" id="message-body" placeholder="Write a message" />
+    <button id="send-message">Send</button>
+</div>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
-    var el = document.getElementById( "server-time" );
+    var loginButton = document.getElementById( 'login-button' );
+    var registerButton = document.getElementById( 'register-button' );
+    var email = document.getElementById( 'email' );
+    var password = document.getElementById( 'password' );
+    var errorLabel = document.getElementById( 'error' );
+    var loginDiv = document.getElementById( 'login' );
+    var chatDiv = document.getElementById( 'chat' );
+    var messageInput = document.getElementById( 'message-body' );
+    var sendButton = document.getElementById( 'send-message' );
+    var messageList = document.getElementById( 'chat-message-list' );
 
-    socket.on( 'test-response', function( data ) {
-        console.log( data );
+    if ( localStorage.getItem( 'email' ) && localStorage.getItem( 'token' ) ) {
+        autoLogin();
+    }
+
+    loginButton.onclick = function() {
+        var payload = {
+            email: email.value,
+            password: password.value
+        }
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if ( xhr.readyState === 4 ) {
+                var resp = JSON.parse( xhr.response );
+                console.log( resp );
+                if ( resp.token ) {
+                    localStorage.setItem( 'token', resp.token );
+                    localStorage.setItem( 'email', resp.user.email );
+                    autoLogin();
+                } else {
+                    errorLabel.innerHTML = resp.message;
+                }
+            }
+        }
+
+        xhr.open( 'POST', '/api/user/login', true );
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send( JSON.stringify( payload ) );
+    }
+
+    registerButton.onclick = function() {
+        var payload = {
+            email: email.value,
+            password: password.value
+        }
+        console.log( payload );
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if ( xhr.readyState === 4 ) {
+                var resp = JSON.parse( xhr.response );
+                if ( resp.token ) {
+                    localStorage.setItem( 'token', resp.token );
+                    localStorage.setItem( 'email', resp.user.email );
+                    autoLogin();
+                } else {
+                    errorLabel.innerHTML = resp.message;
+                }
+            }
+        }
+
+        xhr.open( 'POST', '/api/user/register', true );
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send( JSON.stringify( payload ) );
+    }
+
+    function autoLogin() {
+        loginDiv.style = "display: none";
+        chatDiv.style = "display: normal";
+        document.getElementById( 'logged-email' ).innerHTML = 'Welcome, ' + localStorage.getItem( 'email' );
+    }
+
+    function appendMessage( data ) {
+        var li = document.createElement( 'li' );
+        var pSender = document.createElement( 'p' );
+        pSender.innerHTML = data.from + ' ' + Date( data.date );
+        li.appendChild( pSender );
+        var pText = document.createElement( 'p' );
+        pText.innerHTML = data.text;
+        li.appendChild( pText );
+
+        messageList.appendChild( li );
+    }
+
+
+    socket.on( 'new message', function( data ) {
+        appendMessage( data );
     } );
 
-    var button = document.getElementById( 'test-event' );
-    button.onclick = function() {
-        console.log( 'wew press' );
-        socket.emit( 'test', "hai noroc", function( data ) {
-            console.log( data );
-        } );
+    sendButton.onclick = function() {
+        if ( messageInput && messageInput.value ) {
+            var payload = {
+                from: localStorage.getItem( 'email'),
+                text: messageInput.value 
+            }
+
+            socket.emit( 'message', payload, function( data ) {
+                payload.date = Date.now();
+                appendMessage( payload );
+            } );
+        }
     }
 </script>
