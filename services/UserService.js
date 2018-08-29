@@ -1,15 +1,15 @@
-'use strict'
-import mongoose from 'mongoose';
-import User from '../models/userModel';
-import md5 from 'md5';
-import jwt from 'jsonwebtoken';
-import config from '../config.json';
+const mongoose = require( 'mongoose' );
+const User = require( '../models/userModel' );
+const md5 = require( 'md5' );
+const jwt = require( 'jsonwebtoken' );
+const config = require( '../config.json' );
+const validator = require( 'validator' );
 
 exports.AddUser = ( userInfo ) => {
 
     return new Promise( ( resolve, reject ) => {
 
-        if ( !userInfo.email || !userInfo.password ) {
+        if ( !userInfo.email || !userInfo.password || !validator.isEmail( userInfo.email ) ) {
             reject( { status: 400, message: 'Invalid data.' } );
         }
         
@@ -17,7 +17,6 @@ exports.AddUser = ( userInfo ) => {
         const password = md5( userInfo.password );
 
         const newUser = new User( {
-            _id: mongoose.mongo.ObjectId(),
             email: email,
             password: password,
             createdAt: Date.now(),

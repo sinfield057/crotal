@@ -1,8 +1,4 @@
-'use strict'
-import express from 'express';
-import UserService from '../services/UserService';
-
-const router = express.Router();
+const UserService = require( '../services/UserService' );
 
 router.post( '/register', ( req, res ) => {
 
