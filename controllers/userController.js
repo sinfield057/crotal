@@ -1,6 +1,6 @@
 const UserService = require( '../services/UserService' );
 
-router.post( '/register', ( req, res ) => {
+const register = ( req, res ) => {
 
     console.log( req.body );
     
@@ -14,9 +14,9 @@ router.post( '/register', ( req, res ) => {
                 err => res.status( err.status ).json( { message: err.message } ) 
         ); 
 
-} );
+};
 
-router.post( '/login', ( req, res ) => {
+const login = ( req, res ) => {
     
     const userInfo = {
         email: req.body.email,
@@ -27,6 +27,6 @@ router.post( '/login', ( req, res ) => {
         .then(  result => res.status( result.status ).json( { message: result.message, user: result.user, token: result.token } ),
                 err => res.status( err.status ).json( { message: err.message } ) 
         ); 
-} );
+};
 
-module.exports = router;
+module.exports = { register, login };
