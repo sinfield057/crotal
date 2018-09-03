@@ -1,5 +1,6 @@
 const express = require( 'express' );
 const bodyParser = require( 'body-parser' );
+const bunyan = require( 'bunyan' );
 
 const { mongoose } = require( './db/mongoose' );
 const { router } = require( './controllers/router' );
