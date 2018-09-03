@@ -11,6 +11,6 @@ router.get( "/testRoute", ( req, res ) => {
 
 const UserController = require( './userController' );
 
-router.post( '/user', UserController.userCredentials );
+router.post( '/user', UserController.register );
 
 module.exports = { router };
