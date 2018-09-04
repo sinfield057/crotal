@@ -38,7 +38,7 @@ exports.AddUser = ( userInfo ) => {
                     id:     user._id,
                 }
 
-                sendEmail( { payload } )
+                sendEmail( { email: user.email, id: user._id } )
                     .then( info => resolve( { status: 201, message: 'User registered.' } ) )
                     .catch( err => {
                         console.log ( err );
