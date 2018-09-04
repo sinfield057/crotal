@@ -8,10 +8,15 @@ const register = ( req, res ) => {
     }
 
     UserService.AddUser( userInfo )
-        .then(  result => res.status( result.status ).json( { message: result.message, user: result.user, token: result.token } ),
-                err => res.status( err.status ).json( { message: err.message } ) 
-        ); 
-
+        .then(  result => {
+                    console.log( result, 'this is result' );
+                    res.status( result.status ).json( { message: result.message, user: result.user, token: result.token } )
+                },
+                err => {
+                    console.log( err, 'this is error' );
+                    res.status( err.status ).json( { message: err.message } ) 
+                }
+            );
 };
 
 const login = ( req, res ) => {
