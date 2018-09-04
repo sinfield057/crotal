@@ -41,6 +41,7 @@ exports.AddUser = ( userInfo ) => {
                 sendEmail( { payload } )
                     .then( info => resolve( { status: 201, message: 'User registered.' } ) )
                     .catch( err => {
+                        console.log ( err );
                         User.deleteOne( user )
                             .then( deletedUser => reject( { status: 500, message: 'Failed to send email.' } ) )
                             .catch( err => reject( { status: 500, message: 'Failed to send email and wipe out user.' } ) );
