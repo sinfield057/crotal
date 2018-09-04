@@ -1,5 +1,6 @@
 const mongoose = require( 'mongoose' );
 const { User } = require( '../models/userModel' );
+const { sendEmail } = require( './MailService' );
 const md5 = require( 'md5' );
 const jwt = require( 'jsonwebtoken' );
 const config = require( '../config.json' );
@@ -37,7 +38,14 @@ exports.AddUser = ( userInfo ) => {
                     lastName: user.lastName,
                 }
 
-                resolve( { status: 201, message: 'User registered.', user: user, token: generateToken( payload ) } ); 
+                sendEmail( { payload } )
+                    .then( info => resolve( { status: 201, message: 'User registered.' } ) )
+                    .catch( err => {
+                        User.deleteOne( user )
+                            .then( deletedUser => reject( { status: 500, message: 'Failed to send email.' } ) )
+                            .catch( err => reject( { status: 500, message: 'Failed to send email and wipe out user.' } ) );
+                    } )
+                 
             } )
             .catch( ( err ) => { 
                 switch ( err.code ) {
@@ -55,7 +63,7 @@ exports.CheckUser = ( userInfo ) => {
     return new Promise( ( resolve, reject ) => {
         
         if ( !userInfo.email || !userInfo.password ) {
-            reject( { status: 400, message: 'Invalid data.' } );
+            reject( { status: 403, message: 'Invalid data.' } );
         }
 
         const email = userInfo.email;

@@ -65,36 +65,36 @@ UserSchema.methods.toJSON = function() {
 		]);
   };
   
-  UserSchema.methods.generateAuthToken = function() {
-		const user = this;
-		const access = "auth";
-		const token = jwt
-			.sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
-			.toString();
+UserSchema.methods.generateAuthToken = function() {
+	const user = this;
+	const access = "auth";
+	const token = jwt
+		.sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
+		.toString();
+	
+	user.tokens = user.tokens.concat([{ access, token }]);
+	
+	return user.save().then(() => {
+		return token;
+	});
+};
 		
-		user.tokens = user.tokens.concat([{ access, token }]);
-		
-		return user.save().then(() => {
-			return token;
-		});
-		};
-		
-		UserSchema.statics.findByToken = token => {
-		const User = this;
-		var decoded;
-		
-		try {
-			decoded = jwt.verify( token, process.env.JWT_SECRET );
-		} catch ( e ) {
-			return Promise.reject( 'Error decoding token' );
-		}
-		
-		return User.findOne({
-			_id: decoded._id,
-			'tokens.token': token,
-			'tokens.access': "auth"
-		} );
-	};
+UserSchema.statics.findByToken = token => {
+	const User = this;
+	var decoded;
+	
+	try {
+		decoded = jwt.verify( token, process.env.JWT_SECRET );
+	} catch ( e ) {
+		return Promise.reject( 'Error decoding token' );
+	}
+	
+	return User.findOne({
+		_id: decoded._id,
+		'tokens.token': token,
+		'tokens.access': "auth"
+	} );
+};
 	
 const User = mongoose.model( 'User', UserSchema );
 
