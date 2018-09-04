@@ -40,6 +40,10 @@ const UserSchema = new Schema( {
 		  }
 		}
 	],
+	activated: {
+		type: Boolean,
+		default: false
+	},
 	createdAt:  Date,
 	lastLogin:  Date,
 	wallet: {
@@ -56,9 +60,8 @@ UserSchema.methods.toJSON = function() {
 	  '_id',
 	  'email',
 	  'firstName',
-	  'lastName',
-	  'role',
-	  'specializations'
+		'lastName',
+		'wallet'
 	]);
   };
   

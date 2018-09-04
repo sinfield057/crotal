@@ -1,12 +1,10 @@
 const UserService = require( '../services/UserService' );
 
 const register = ( req, res ) => {
-
-    console.log( req.body );
     
     const userInfo = {
         email: req.body.email,
-        password: req.body.email
+        password: req.body.password
     }
 
     UserService.AddUser( userInfo )
@@ -20,7 +18,7 @@ const login = ( req, res ) => {
     
     const userInfo = {
         email: req.body.email,
-        password: req.body.email
+        password: req.body.password
     }
 
     UserService.CheckUser( userInfo )

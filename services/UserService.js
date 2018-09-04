@@ -15,14 +15,16 @@ exports.AddUser = ( userInfo ) => {
             reject( { status: 403, message: 'Invalid data.' } );
         }
         
-        const email = userInfo.email;
+        const { email, lastName, firstName } = userInfo;
         const password = md5( userInfo.password );
 
         const newUser = new User( {
-            email: email,
-            password: password,
+            email,
+            password,
+            firstName,
+            lastName,
             createdAt: Date.now(),
-            lastLogin: Date.now()
+            lastLogin: Date.now(),
         } );
         
         newUser.save()
@@ -30,7 +32,9 @@ exports.AddUser = ( userInfo ) => {
                 
                 let payload = {
                     id:     user._id,
-                    email:  user.email
+                    email:  user.email,
+                    fistName: user.firstName,
+                    lastName: user.lastName,
                 }
 
                 resolve( { status: 201, message: 'User registered.', user: user, token: generateToken( payload ) } ); 
