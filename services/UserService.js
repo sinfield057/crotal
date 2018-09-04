@@ -32,10 +32,10 @@ exports.AddUser = ( userInfo ) => {
             .then( ( user ) => {
                 
                 let payload = {
-                    id:     user._id,
                     email:  user.email,
                     fistName: user.firstName,
                     lastName: user.lastName,
+                    id:     user._id,
                 }
 
                 sendEmail( { payload } )
