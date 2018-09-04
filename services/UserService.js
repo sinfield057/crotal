@@ -10,7 +10,7 @@ exports.AddUser = ( userInfo ) => {
     return new Promise( ( resolve, reject ) => {
 
         if ( !userInfo.email || !userInfo.password || !validator.isEmail( userInfo.email ) ) {
-            reject( { status: 400, message: 'Invalid data.' } );
+            reject( { status: 403, message: 'Invalid data.' } );
         }
         
         const email = userInfo.email;
