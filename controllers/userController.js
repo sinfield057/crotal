@@ -4,7 +4,9 @@ const register = ( req, res ) => {
     
     const userInfo = {
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
     }
 
     UserService.AddUser( userInfo )

@@ -13,8 +13,8 @@ const UserSchema = new Schema( {
 		unique: true,
 		validate: {
 		  validator: value => {
-			return validator.isEmail(value);
-		  },
+				return validator.isEmail(value);
+			},
 		  message: "{VALUE} is not a valid email"
 		}
 	},
