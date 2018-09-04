@@ -4,7 +4,7 @@ const jwt = require( 'jsonwebtoken' );
 const _ = require( 'lodash' );
 const Schema = mongoose.Schema;
 
-const User = new Schema( {
+const UserSchema = new Schema( {
 	email: {
 		type: String,
 		required: true,
@@ -94,6 +94,10 @@ UserSchema.methods.toJSON = function() {
 			'tokens.token': token,
 			'tokens.access': "auth"
 		} );
-  };
+	};
+	
+const User = mongoose.model( 'User', UserSchema );
 
-module.exports = { User };
+module.exports = {
+  User
+};
