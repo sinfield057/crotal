@@ -16,7 +16,7 @@ const sendEmail = ( recipient ) => {
         subject: 'Crotal Account Activation',
         html: `Click here to confirm your account: https://crotal.herokuapp.com/activate/${ recipient.id }`
     };
-
+    console.log( mailOptions );
     return transporter.sendMail( mailOptions );
 }
 
