@@ -9,6 +9,8 @@ exports.AddUser = ( userInfo ) => {
 
     return new Promise( ( resolve, reject ) => {
 
+        console.log( userInfo );
+
         if ( !userInfo.email || !userInfo.password || !validator.isEmail( userInfo.email ) ) {
             reject( { status: 403, message: 'Invalid data.' } );
         }
