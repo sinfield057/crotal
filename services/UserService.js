@@ -1,5 +1,5 @@
 const mongoose = require( 'mongoose' );
-const User = require( '../models/userModel' );
+const { User } = require( '../models/userModel' );
 const md5 = require( 'md5' );
 const jwt = require( 'jsonwebtoken' );
 const config = require( '../config.json' );
