@@ -101,7 +101,7 @@ exports.ActivateUser = ( id ) => {
     return new Promise( ( resolve, reject ) => {
         User.findOneAndUpdate( { _id: id }, { activated: true }, { new: true } )
             .then( user => {
-                if ( !user || user.activated ) {
+                if ( !user ) {
                     reject( { status: 404, message: 'Invalid id.' } );
                     return;
                 }
