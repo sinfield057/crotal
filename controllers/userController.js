@@ -34,4 +34,22 @@ const login = ( req, res ) => {
         ); 
 };
 
-module.exports = { register, login };
+const activate = ( req, res ) => {
+    
+    const { id } = req.params;
+
+    UserService.ActivateUser( id )
+        .then( result => res.status( result.status ).json( { message: result.message, user: result.user, token: result.token } ),
+                err => res.status( err.status ).json( { message: err.message } ) );
+}
+
+const resend = ( req, res ) => {
+
+    const { email } = req.params;
+
+    UserService.ResendMail( email )
+    .then( result => res.status( result.status ).json( { message: result.message } ),
+            err => res.status( err.status ).json( { message: err.message } ) );
+}
+
+module.exports = { register, login, activate, resend };

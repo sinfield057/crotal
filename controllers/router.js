@@ -12,5 +12,7 @@ router.get( "/testRoute", ( req, res ) => {
 const UserController = require( './userController' );
 
 router.post( '/user', UserController.register );
+router.get( '/activate/:id', UserController.activate );
+router.get( '/resend/:email', UserController.resend );
 
 module.exports = { router };

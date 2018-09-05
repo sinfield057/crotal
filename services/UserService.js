@@ -81,10 +81,10 @@ exports.CheckUser = ( userInfo ) => {
                     reject( { status: 404, message: 'Invalid credentials.' } );
                 } else {
                     
-                    let payload = {
+                    const payload = {
                         id:     user._id,
                         email:  user.email
-                    }
+                    };
     
                     resolve( { status: 201, message: 'Login successful.', user: user, token: generateToken( payload ) } )
                 }
@@ -93,6 +93,36 @@ exports.CheckUser = ( userInfo ) => {
                 reject( { status: 500, message: 'Internal server error.' } );
             } );
     } )
+}
+
+exports.ActivateUser = ( id ) => {
+    return new Promise( ( resolve, reject ) => {
+        User.findOneAndUpdate( { id }, { activated: true }, { new: true } )
+            .then( user => {
+                const payload = {
+                    id:     user._id,
+                    email:  user.email
+                };
+                resolve( { status: 201, message: 'Login successful.', user: user, token: generateToken( payload ) } )
+            } )
+            .catch( ( err ) => {
+                reject( { status: 500, message: 'Internal server error.' } );
+            } );
+    } );
+}
+
+exports.ResendMail = ( email ) => {
+    return new Promise( ( resolve, reject ) => {
+        User.findOne( { email } )
+            .then( user => {
+                sendEmail( { email: user.email, id: user._id } )
+                    .then( info => resolve( { status: 201, message: 'Email resent' } ) )
+                    .catch( err => {
+                        reject( { status: 500, message: 'Failed to resend email.' } );
+                    } )
+            } )
+            .catch( err => reject( { status: 500, message: 'Internal server error while resending email.' } ) );
+    } );
 }
 
 function generateToken( payload ) {
