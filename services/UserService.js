@@ -97,7 +97,7 @@ exports.CheckUser = ( userInfo ) => {
 
 exports.ActivateUser = ( id ) => {
     return new Promise( ( resolve, reject ) => {
-        User.findOneAndUpdate( { id }, { activated: true }, { new: true } )
+        User.findOneAndUpdate( { _id: id }, { activated: true }, { new: true } )
             .then( user => {
                 const payload = {
                     id:     user._id,
