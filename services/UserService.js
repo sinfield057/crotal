@@ -88,11 +88,11 @@ exports.CheckUser = ( userInfo ) => {
 
                     user.generateAuthToken()
                         .then( token => resolve( { status: 201, message: 'Login successful.', user: user, token } ) )
-                        .catch( err => reject( { status: 500, message: 'Internal server error.' } ) );
+                        .catch( err => reject( { status: 500, message: 'Internal server error.', err } ) );
                 }
             } )
             .catch( ( err ) => {
-                reject( { status: 500, message: 'Internal server error.' } );
+                reject( { status: 500, message: 'Internal server error.', err } );
             } );
     } )
 }
