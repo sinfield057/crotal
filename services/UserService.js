@@ -85,8 +85,10 @@ exports.CheckUser = ( userInfo ) => {
                         id:     user._id,
                         email:  user.email
                     };
-    
-                    resolve( { status: 201, message: 'Login successful.', user: user, token: generateToken( payload ) } )
+
+                    user.generateAuthToken()
+                        .then( token => resolve( { status: 201, message: 'Login successful.', user: user, token } ) )
+                        .catch( err => reject( { status: 500, message: 'Internal server error.' } ) );
                 }
             } )
             .catch( ( err ) => {
@@ -103,7 +105,9 @@ exports.ActivateUser = ( id ) => {
                     id:     user._id,
                     email:  user.email
                 };
-                resolve( { status: 201, message: 'Login successful.', user: user, token: generateToken( payload ) } )
+                user.generateAuthToken()
+                        .then( token => resolve( { status: 201, message: 'Login successful.', user: user, token } ) )
+                        .catch( err => reject( { status: 500, message: 'Internal server error.' } ) );
             } )
             .catch( ( err ) => {
                 reject( { status: 500, message: 'Internal server error.' } );
@@ -126,7 +130,7 @@ exports.ResendMail = ( email ) => {
 }
 
 function generateToken( payload ) {
-    return jwt.sign( payload, config.secret, {
+    return jwt.sign( payload, process.env.JWT_SECRET, {
         expiresIn: 60 * 60 * 24
     } );
 }
